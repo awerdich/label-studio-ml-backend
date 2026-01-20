@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   ml-backend:
     container_name: ml-backend
@@ -8,16 +6,15 @@ services:
       context: .
       args:
         TEST_ENV: ${TEST_ENV}
-
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - driver: nvidia
-#              count: 1
-#              capabilities: [ gpu ]
-
-
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['7']
+              capabilities: [ gpu ]
+    networks:
+      - label-studio-network
     environment:
       # specify these parameters if you want to use basic auth for the model server
       - BASIC_AUTH_USER=
@@ -43,9 +40,13 @@ services:
       # Do not use 'localhost' as it does not work within Docker containers.
       # Use prefix 'http://' or 'https://' for the URL always.
       # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
-      - LABEL_STUDIO_URL=
-      - LABEL_STUDIO_API_KEY=
+      - LABEL_STUDIO_URL=${LABEL_STUDIO_URL}
+      - LABEL_STUDIO_API_KEY=${LABEL_STUDIO_API_KEY}
     ports:
       - "9090:9090"
     volumes:
       - "./data/server:/data"
+
+networks:
+  label-studio-network:
+    external: true
