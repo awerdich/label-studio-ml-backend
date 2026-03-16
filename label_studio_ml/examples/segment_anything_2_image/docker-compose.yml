@@ -11,7 +11,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              device_ids: ['7']
+              device_ids: ['1']
               capabilities: [ gpu ]
     networks:
       - label-studio-network
@@ -45,7 +45,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - "./data/server:/data"
+      - ./data/server:/data
 
 networks:
   label-studio-network:
